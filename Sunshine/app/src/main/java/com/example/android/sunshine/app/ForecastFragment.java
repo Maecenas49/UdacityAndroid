@@ -45,8 +45,8 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         if (id == R.id.action_refresh){
-            FetchWeatherTask WeatherTask =  new FetchWeatherTask("32608");
-            WeatherTask.execute();
+            FetchWeatherTask WeatherTask =  new FetchWeatherTask();
+            WeatherTask.execute("32608");
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -84,17 +84,12 @@ public class ForecastFragment extends Fragment {
 
 
 
-    public class FetchWeatherTask extends AsyncTask<URL,Integer,String> {
+    public class FetchWeatherTask extends AsyncTask<String,Integer,String> {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
-        private String postalCode;
-
-        public FetchWeatherTask(String postalCode){
-            this.postalCode = postalCode;
-        }
 
         @Override
-        protected String doInBackground(URL... urls){
+        protected String doInBackground(String... params){
 
 
         // These two need to be declared outside the try/catch
@@ -104,18 +99,29 @@ public class ForecastFragment extends Fragment {
 
         // Will contain the raw JSON response as a string.
         String forecastJsonStr = null;
+        String format = "json";
+        String units = "metric";
+        int numDays = 7;
 
         try {
             // Construct the URL for the OpenWeatherMap query
             // Possible parameters are avaiable at OWM's forecast API page, at
             // http://openweathermap.org/API#forecast
+            final String QUERY_PARAM = "q";
+            final String UNITS_PARAM = "units";
+            final String FORMAT_PARAM = "mode";
+            final String DAYS_PARAM = "cnt";
             Uri.Builder builder = new Uri.Builder();
-            builder.scheme("http").authority("api.openweathermap.org").appendPath("data")
-                    .appendPath("2.5").appendPath("forecast").appendPath("daily")
-                    .appendQueryParameter("q",postalCode).appendQueryParameter("mode","json")
-                    .appendQueryParameter("units","metric").appendQueryParameter("cnt","7");
+
+            builder.scheme("http").authority("api.openweathermap.org")
+                    .appendPath("data").appendPath("2.5").appendPath("forecast").appendPath("daily")
+                    .appendQueryParameter(QUERY_PARAM,params[0])
+                    .appendQueryParameter(FORMAT_PARAM,format)
+                    .appendQueryParameter(UNITS_PARAM,units)
+                    .appendQueryParameter(DAYS_PARAM,Integer.toString(numDays));
+
             URL url = new URL(builder.build().toString());
-            Log.v(LOG_TAG,builder.build().toString());
+            Log.v(LOG_TAG,"Built URI: " +builder.build().toString());
             //Previous URL without input parameters
             // URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=32608&mode=json&units=metric&cnt=7");
 
