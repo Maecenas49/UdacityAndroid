@@ -37,6 +37,7 @@ import java.util.List;
 public class ForecastFragment extends Fragment {
 
     private ArrayAdapter<String> mForecastAdapter;
+
     public ForecastFragment() {
     }
 
@@ -72,7 +73,7 @@ public class ForecastFragment extends Fragment {
         String[] data = {"Today - Never - 88/63", "Tomorrow - Gonna - 70/46",
                 "Weds - Give - 72/63", "Thurs - You - 64/51", "Fri - Up - 70/46",
                 "Sat - Sunny - 76/68"};
-        List<String> weekForecast = new ArrayList<String> (Arrays.asList(data));
+        List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
 
 
         mForecastAdapter =
@@ -275,15 +276,18 @@ public class ForecastFragment extends Fragment {
 
         /**
          * Updating the ArrayAdapter with the data received from the JSON Object
+         *
          * @param result
          */
         @Override
-        protected void onPostExecute(String[] result){
-
-            mForecastAdapter.clear();
-            mForecastAdapter.addAll(Arrays.asList(result));
-            mForecastAdapter.notifyDataSetChanged();
-
+        protected void onPostExecute(String[] result) {
+            if (result != null) {
+                mForecastAdapter.clear();
+                for (String dayForecastStr : result) {
+                    mForecastAdapter.add(dayForecastStr);
+                    mForecastAdapter.notifyDataSetChanged();
+                }
+            }
         }
     }
 }
