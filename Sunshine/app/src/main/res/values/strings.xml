@@ -10,9 +10,16 @@
 
     <!-- Label for the location preference [CHAR LIMIT=30]-->
     <string name="pref_location_label">Location</string>
-    <!-- Key name for storing the location prefernce in SharedPreferences [CHAR LIMIT=NONE]-->
+    <!-- Key name for storing the location preference in SharedPreferences [CHAR LIMIT=NONE]-->
     <string name="pref_location_key" translatable="false">location</string>
     <!-- Default postal code for location preference [CHAR LIMIT=NONE]-->
     <string name="pref_location_default" translatable="false">32608</string>
+
+    <!-- Label for the unites preference [CHAR LIMIT=30]-->
+    <string name="pref_units_label">Temperature Units</string>
+    <!-- Key name for storing the units preference in SharePreferences [CHAR LIMIT=NONE]-->
+    <string name="pref_units_key" translatable="false">units</string>
+    <!-- Default value for units preference [CHAR LIMIT=NONE]-->
+    <string name="pref_units_default" translatable="false">Metric</string>
 
 </resources>

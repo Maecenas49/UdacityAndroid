@@ -44,9 +44,7 @@ import java.util.List;
 public class ForecastFragment extends Fragment {
 
     private ArrayAdapter<String> mForecastAdapter;
-    private String[] data;
     private final String LOG_TAG="ForecastFragment";
-    private String location;
 
     public ForecastFragment() {
     }
@@ -56,13 +54,6 @@ public class ForecastFragment extends Fragment {
         super.onCreate(savedInstanceState);
         //Add this line for this fragment to handle menu events
         setHasOptionsMenu(true);
-
-        //Fake forecast data for populating our adapter
-        if (data==null){
-            data = new String[] {"Today - Never - 88/63", "Tomorrow - Gonna - 70/46",
-                    "Weds - Give - 72/63", "Thurs - You - 64/51", "Fri - Up - 70/46",
-                    "Sat - Sunny - 76/68"};
-        }
     }
 
     @Override
@@ -74,13 +65,7 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            FetchWeatherTask WeatherTask = new FetchWeatherTask();
-
-            //Get postal location from Shared Preferences
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            location = sharedPref.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
-
-            WeatherTask.execute(location);
+            updateWeather();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -91,10 +76,6 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-
-        List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
-
-
         mForecastAdapter =
                 new ArrayAdapter<String>(
                         //The current context (this fragment's parent activity
@@ -104,7 +85,7 @@ public class ForecastFragment extends Fragment {
                         // ID of the textview to population
                         R.id.list_item_forecast_textview,
                         // Forecast_data
-                        weekForecast);
+                        new ArrayList<String>());
 
         //Creating a ListView
         ListView mListView = (ListView) rootView.findViewById(R.id.listview_forcast);
@@ -131,6 +112,21 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
 
+
+    private void updateWeather(){
+        FetchWeatherTask WeatherTask = new FetchWeatherTask();
+
+        //Get postal location from Shared Preferences
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = sharedPref.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+        WeatherTask.execute(location);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        updateWeather();
+    }
 
     public class FetchWeatherTask extends AsyncTask<String, Integer, String[]> {
 
