@@ -20,6 +20,16 @@
     <!-- Key name for storing the units preference in SharePreferences [CHAR LIMIT=NONE]-->
     <string name="pref_units_key" translatable="false">units</string>
     <!-- Default value for units preference [CHAR LIMIT=NONE]-->
-    <string name="pref_units_default" translatable="false">Metric</string>
+    <string name="pref_units_default" translatable="false">imperial</string>
+    <!--Array of options for the unit preference-->
+    <string-array name="pref_units_options">
+        <item name="metric">Metric</item>
+        <item name="imperial">Imperial</item>
+    </string-array>
+    <!--Array of values for the unit preferences-->
+    <string-array name="pref_units_values">
+        <item name="metric">metric</item>
+        <item name="imperial">imperial</item>
+    </string-array>
 
 </resources>

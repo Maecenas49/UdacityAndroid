@@ -223,7 +223,10 @@ public class ForecastFragment extends Fragment {
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
             String format = "json";
-            String units = "imperial";
+            //Get units from shared preferences
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String units = sharedPref.getString(getString(R.string.pref_units_key),getString(R.string.pref_location_default));
+
             int numDays = 7;
             String[] weatherArray = new String[numDays];
 
