@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -111,7 +112,6 @@ public class ForecastFragment extends Fragment {
 
         return rootView;
     }
-
 
     private void updateWeather(){
         FetchWeatherTask WeatherTask = new FetchWeatherTask();

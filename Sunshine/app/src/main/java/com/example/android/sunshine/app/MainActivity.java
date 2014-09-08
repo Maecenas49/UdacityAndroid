@@ -2,10 +2,15 @@ package com.example.android.sunshine.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.net.URI;
+import java.util.Locale;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -40,7 +45,21 @@ public class MainActivity extends ActionBarActivity {
             startActivity(settingsIntent);
             return true;
         }
+        if (id==R.id.action_map){
+            showMap();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
+    //Function to pass the users preferred location through an implicit intent to view a map
+    private void showMap(){
+        String location = PreferenceManager.getDefaultSharedPreferences(this).getString("location", getString(R.string.pref_location_default));
+        //Create a geo Uri to pass to the map viewer
+        Uri geoLocation = Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q",location).build();
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, geoLocation);
+        if (mapIntent.resolveActivity(this.getPackageManager()) != null) {
+            startActivity(mapIntent);
+        }
+    }
 }
