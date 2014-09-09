@@ -1,21 +1,25 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 
 public class DetailActivity extends ActionBarActivity {
 
     private static String detailText;
+    private final String LOG_TAG = "DetailActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +32,6 @@ public class DetailActivity extends ActionBarActivity {
             detailText = startIntent.getStringExtra(Intent.EXTRA_TEXT);
         }
 
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.container, new DetailFragment())
-                .commit();
-
-
-
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, new DetailFragment())
@@ -45,6 +43,7 @@ public class DetailActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        menu.clear();
         getMenuInflater().inflate(R.menu.detail, menu);
         return true;
     }
@@ -64,21 +63,52 @@ public class DetailActivity extends ActionBarActivity {
     }
 
     /**
-     * A placeholder fragment containing a simple view.
-     */
+    * Created by Mike on 9/8/2014.
+    */
     public static class DetailFragment extends Fragment {
 
-        public DetailFragment() {
+        private ShareActionProvider mSharedActionProvider;
+        private final String LOG_TAG = "DetailFragment";
+        private String mForecastStr;
+
+        public DetailFragment(){
+            setHasOptionsMenu(true);
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-
+            //Setting detail text as identified in detailActivity
+            DetailActivity detailActivity = (DetailActivity)getActivity();
             //Create TextView to display weather details received from intent
-            ((TextView) rootView.findViewById(R.id.detail_text)).setText(detailText);
+            Intent startIntent = getActivity().getIntent();
+            if (startIntent !=null && startIntent.hasExtra(Intent.EXTRA_TEXT)) {
+                mForecastStr = startIntent.getStringExtra(Intent.EXTRA_TEXT);
+            }
+            ((TextView) rootView.findViewById(R.id.detail_text)).setText(mForecastStr);
             return rootView;
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){
+            menuInflater.inflate(R.menu.detailfragment, menu);
+            //Retrieved the sharedActionProvider
+            MenuItem item = menu.findItem(R.id.menu_item_share);
+            mSharedActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+            Intent shareIntent = new Intent(Intent.ACTION_SEND)
+                    .putExtra(Intent.EXTRA_TEXT, mForecastStr + " #SunshineApp")
+                    .setType("text/plain").setFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            if (mSharedActionProvider !=null){
+                mSharedActionProvider.setShareIntent(shareIntent);
+            }else {
+                Log.d(LOG_TAG, "Share Action Provider is null.");
+            }
         }
     }
 }
