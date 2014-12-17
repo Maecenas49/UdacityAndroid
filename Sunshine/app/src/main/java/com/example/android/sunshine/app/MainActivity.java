@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,10 +15,12 @@ import java.util.Locale;
 
 
 public class MainActivity extends ActionBarActivity {
+    final String LOG_TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(LOG_TAG,"onCreate Called");
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
@@ -50,6 +53,36 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(LOG_TAG,"onStop Called");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(LOG_TAG,"onPause Called");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i(LOG_TAG,"onResume Called");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(LOG_TAG,"onStart Called");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(LOG_TAG,"onDestroy Called");
     }
 
     //Function to pass the users preferred location through an implicit intent to view a map

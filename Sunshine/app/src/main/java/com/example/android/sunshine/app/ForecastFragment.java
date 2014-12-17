@@ -53,6 +53,7 @@ public class ForecastFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(LOG_TAG, "onCreate called");
         //Add this line for this fragment to handle menu events
         setHasOptionsMenu(true);
     }
@@ -124,6 +125,7 @@ public class ForecastFragment extends Fragment {
 
     @Override
     public void onStart(){
+        Log.i(LOG_TAG,"onStart Called");
         super.onStart();
         updateWeather();
     }
@@ -324,5 +326,7 @@ public class ForecastFragment extends Fragment {
                 }
             }
         }
+
+
     }
 }
